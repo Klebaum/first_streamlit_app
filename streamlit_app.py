@@ -41,7 +41,7 @@ my_cur.execute("SELECT * FROM fruit_load_list")
 my_data_rows = my_cur.fetchall()
 st.header("The fruit load list")
 st.dataframe(my_data_rows)
-
+st.stop()
 # Finall lab
 st.header("What fruit would like to add?")
 
