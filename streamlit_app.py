@@ -3,6 +3,11 @@ import pandas as pd
 import requests
 import snowflake.connector
 
+def get_frutyvice_fruit_info(fruit_name):
+    fruityvice_response = requests.get("https://fruityvice.com/api/fruit/" + fruit_name)
+    fruityvice_normalized = pd.json_normalize(fruityvice_response.json())
+    return fruityvice_normalized
+
 st.title("My Parents New Healthy Diner")
 
 st.header("Breakfast Menu")
@@ -24,15 +29,16 @@ st.dataframe(fruits_to_show)
 
 # API response
 st.header("Fruityvice Fruit Advice!")
+try:
+    fruit_choice = st.text_input('What fruit would you like information about?')
+    if not fruit_choice:
+        st.warning('Please enter a fruit')
+    else:
+        fruityvice_normalized = get_frutyvice_fruit_info(fruit_choice)
+        st.dataframe(fruityvice_normalized)
+except:
+    st.error()
 
-fruit_choice = st.text_input('What fruit would you like information about?','Kiwi')
-st.write('The user entered ', fruit_choice)
-
-fruityvice_response = requests.get("https://fruityvice.com/api/fruit/" + fruit_choice)
-
-# Normalize with pandas/json to use a streamlit dataframe  
-fruityvice_normalized = pd.json_normalize(fruityvice_response.json())
-st.dataframe(fruityvice_normalized)
 
 # Testing snowflake + streamlit
 my_cnx = snowflake.connector.connect(**st.secrets["snowflake"])
@@ -42,6 +48,7 @@ my_data_rows = my_cur.fetchall()
 st.header("The fruit load list")
 st.dataframe(my_data_rows)
 st.stop()
+
 # Finall lab
 st.header("What fruit would like to add?")
 
