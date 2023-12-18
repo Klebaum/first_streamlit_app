@@ -41,3 +41,10 @@ my_cur.execute("SELECT * FROM fruit_load_list")
 my_data_rows = my_cur.fetchall()
 st.header("The fruit load list")
 st.dataframe(my_data_rows)
+
+# Finall lab
+st.header("What fruit would like to add?")
+
+fruit_add = st.text_input('What fruit would you like information about?','Kiwi')
+my_cur.execute("INSERT INTO fruit_load_list values {fruit_add}")
+st.write('Ty for adding ', fruit_add)
