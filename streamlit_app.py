@@ -67,4 +67,4 @@ add_my_fruit = st.text_input('What fruit would you like to add?')
 if st.button("Add Fruit"):
     my_cnx = snowflake.connector.connect(**st.secrets["snowflake"])
     my_data_rows = insert_row_snowflake(add_my_fruit)
-    st.dataframe(my_data_rows)
+    st.text(my_data_rows)
