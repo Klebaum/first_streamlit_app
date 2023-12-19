@@ -56,8 +56,8 @@ except:
 
 
 # Testing snowflake + streamlit
-st.header("The fruit load list contains:")
-if st.button("Ger Fruit Load List"):
+st.header("View Our Fruit List - Add Your Favorites!")
+if st.button("Ger Fruit List"):
     my_cnx = snowflake.connector.connect(**st.secrets["snowflake"])
     my_data_rows = get_fruit_load_list()
     st.dataframe(my_data_rows)
