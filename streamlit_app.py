@@ -3,15 +3,25 @@ import pandas as pd
 import requests
 import snowflake.connector
 
+
 def get_frutyvice_fruit_info(fruit_name):
     fruityvice_response = requests.get("https://fruityvice.com/api/fruit/" + fruit_name)
     fruityvice_normalized = pd.json_normalize(fruityvice_response.json())
     return fruityvice_normalized
 
+
 def get_fruit_load_list():
     with my_cnx.cursor() as my_cur:
         my_cur.execute("SELECT * FROM fruit_load_list")
         return my_cur.fetchall()
+
+
+# Add a fruit to the list
+def insert_row_snowflake(new_fruit):
+    with my_cnx.cursor() as my_cur:
+        my_cur.execute("INSERT INTO fruit_load_list values ('{new_fruit}');")
+        return "thanks for adding " + new_fruit
+    
 
 st.title("My Parents New Healthy Diner")
 
@@ -52,9 +62,9 @@ if st.button("Ger Fruit Load List"):
     my_data_rows = get_fruit_load_list()
     st.dataframe(my_data_rows)
 
-st.stop()
-
-fruit_add = st.text_input('What fruit would you like information about?')
-my_cur.execute("INSERT INTO fruit_load_list values ('{fruit_add}');")
-my_cur.fetchone()
-st.write('Ty for adding ', fruit_add)
+    
+add_my_fruit = st.text_input('What fruit would you like to add?')
+if st.button("Add Fruit"):
+    my_cnx = snowflake.connector.connect(**st.secrets["snowflake"])
+    my_data_rows = insert_row_snowflake(add_my_fruit)
+    st.dataframe(my_data_rows)
